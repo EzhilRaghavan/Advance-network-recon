@@ -1,0 +1,9 @@
+# Nmap 7.95 scan initiated Sun Dec 21 16:17:37 2025 as: /usr/lib/nmap/nmap --privileged -p 80,443 --script=http-enum,http-title,http-headers -oN scans/127.0.0.1-2025-12-21_16-17-24/06_web_enum.txt 127.0.0.1
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000036s latency).
+
+PORT    STATE  SERVICE
+80/tcp  closed http
+443/tcp closed https
+
+# Nmap done at Sun Dec 21 16:17:37 2025 -- 1 IP address (1 host up) scanned in 0.13 seconds

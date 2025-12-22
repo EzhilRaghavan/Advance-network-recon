@@ -1,0 +1,8 @@
+# Nmap 7.95 scan initiated Sun Dec 21 15:39:18 2025 as: /usr/lib/nmap/nmap --privileged -sS -sV -T4 -oN scans/127.0.0.1-2025-12-21_15-39-18/02_basic_enum.txt 127.0.0.1
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.0000010s latency).
+All 1000 scanned ports on localhost (127.0.0.1) are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun Dec 21 15:39:18 2025 -- 1 IP address (1 host up) scanned in 0.19 seconds

@@ -1,0 +1,9 @@
+[+] Recon Started on 127.0.0.1 at 2025-12-21_15-39-18
+[+] Phase 1: Host Discovery
+[+] Phase 2: Basic Port & Service Enumeration
+[+] Phase 3: Full TCP Port Scan
+[+] Phase 4: OS Detection & Default NSE Scripts
+[+] Phase 5: Vulnerability Enumeration
+[+] Phase 6: Web Enumeration
+[+] Recon Completed Successfully
+[+] Results stored in scans/127.0.0.1-2025-12-21_15-39-18
