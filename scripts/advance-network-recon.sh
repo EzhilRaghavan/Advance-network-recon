@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# ============================================================
-# ADVANCED NMAP NETWORK RECONNAISSANCE & SERVICE ENUMERATION
-# Author  : Cyber Recon Project
-# Purpose : Multi-phase automated recon with logging & reports
-# ============================================================
+# Advanced Nmap network reconnaissance and service enumeration
+# Performs multi-phase scanning with organized output and logging
 
-# -------------------- VALIDATION --------------------
+# Validate input
 if [ -z "$1" ]; then
     echo "Usage: $0 <TARGET_IP_OR_RANGE>"
     exit 1
@@ -14,53 +11,38 @@ fi
 
 TARGET=$1
 DATE=$(date +"%Y-%m-%d_%H-%M-%S")
-BASE_DIR="scans/$TARGET-$DATE"
-
-mkdir -p $BASE_DIR
-
+BASE_DIR="scans/${TARGET}-${DATE}"
 LOGFILE="$BASE_DIR/recon.log"
 
-echo "[+] Recon Started on $TARGET at $DATE" | tee -a $LOGFILE
+mkdir -p "$BASE_DIR"
 
-# -------------------- PHASE 1 --------------------
-# Host Discovery (Ping Sweep)
+echo "[+] Recon started on $TARGET at $DATE" | tee -a "$LOGFILE"
 
-echo "[+] Phase 1: Host Discovery" | tee -a $LOGFILE
-nmap -sn $TARGET -oN $BASE_DIR/01_host_discovery.txt
+# Phase 1: Host discovery (ping sweep)
+echo "[+] Phase 1: Host discovery" | tee -a "$LOGFILE"
+nmap -sn "$TARGET" -oN "$BASE_DIR/01_host_discovery.txt"
 
-# -------------------- PHASE 2 --------------------
-# Basic Port & Service Enumeration
+# Phase 2: Basic port and service enumeration
+echo "[+] Phase 2: Basic port and service enumeration" | tee -a "$LOGFILE"
+nmap -sS -sV -T4 "$TARGET" -oN "$BASE_DIR/02_basic_enum.txt"
 
-echo "[+] Phase 2: Basic Port & Service Enumeration" | tee -a $LOGFILE
-nmap -sS -sV -T4 $TARGET -oN $BASE_DIR/02_basic_enum.txt
+# Phase 3: Full TCP port scan
+echo "[+] Phase 3: Full TCP port scan" | tee -a "$LOGFILE"
+nmap -p- -T4 "$TARGET" -oN "$BASE_DIR/03_full_port_scan.txt"
 
-# -------------------- PHASE 3 --------------------
-# Full TCP Port Scan
+# Phase 4: OS detection and default NSE scripts
+echo "[+] Phase 4: OS detection and default scripts" | tee -a "$LOGFILE"
+nmap -O --script=default "$TARGET" -oN "$BASE_DIR/04_os_nse.txt"
 
-echo "[+] Phase 3: Full TCP Port Scan" | tee -a $LOGFILE
-nmap -p- -T4 $TARGET -oN $BASE_DIR/03_full_port_scan.txt
+# Phase 5: Vulnerability enumeration using NSE
+echo "[+] Phase 5: Vulnerability enumeration" | tee -a "$LOGFILE"
+nmap --script vuln "$TARGET" -oN "$BASE_DIR/05_vulnerability_scan.txt"
 
-# -------------------- PHASE 4 --------------------
-# OS Detection & Default Scripts
+# Phase 6: Web service enumeration (common HTTP/HTTPS ports)
+echo "[+] Phase 6: Web service enumeration" | tee -a "$LOGFILE"
+nmap -p 80,443 --script=http-enum,http-title,http-headers "$TARGET" \
+-oN "$BASE_DIR/06_web_enum.txt"
 
-echo "[+] Phase 4: OS Detection & Default NSE Scripts" | tee -a $LOGFILE
-nmap -O --script=default $TARGET -oN $BASE_DIR/04_os_nse.txt
-
-# -------------------- PHASE 5 --------------------
-# Vulnerability Enumeration
-
-echo "[+] Phase 5: Vulnerability Enumeration" | tee -a $LOGFILE
-nmap --script vuln $TARGET -oN $BASE_DIR/05_vulnerability_scan.txt
-
-# -------------------- PHASE 6 --------------------
-# Web Service Enumeration (If HTTP Found)
-
-echo "[+] Phase 6: Web Enumeration" | tee -a $LOGFILE
-nmap -p 80,443 --script=http-enum,http-title,http-headers $TARGET \
--oN $BASE_DIR/06_web_enum.txt
-
-# -------------------- COMPLETION --------------------
-
-echo "[+] Recon Completed Successfully" | tee -a $LOGFILE
-echo "[+] Results stored in $BASE_DIR" | tee -a $LOGFILE
-
+# Completion
+echo "[+] Recon completed successfully" | tee -a "$LOGFILE"
+echo "[+] Results stored in $BASE_DIR" | tee -a "$LOGFILE"
